@@ -1,15 +1,10 @@
 # weekly-report-gen
 
-generate your weekly report which integrated web services.
+generate your weekly report which integrated services.
 
-## web services
+## services
 
-- github.com
-  - issues
-  - Pull requests
-- asana
-  - tasks
-- esa
+- esa.io
 
 ## grouping
 
@@ -29,12 +24,11 @@ representation like this
 
 ## format
 
-now, markdown only
+markdown only
 
 exsample
 ```
-## this week
-- GroupA
-  - [groupA/note](https://hoge.com)
+- CategoryA
+  - [my_note](https://hoge.com)
 
 ```

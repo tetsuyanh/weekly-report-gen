@@ -1,0 +1,11 @@
+out ="" # filepath, empty means stdout
+
+[categoryMap]
+日本 = ["日本", "にほん", "にっぽん", "ニホン", "ニッポン", "Japan", "japan", "JP"]
+アメリカ = ["米", ”あめりか", "アメリカ", "USA", "US"]
+
+[esa]
+enable = false
+apiToken = ""
+team = ""
+user = ""
