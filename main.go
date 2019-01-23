@@ -18,6 +18,7 @@ type (
 		Out         string
 		CategoryMap reporter.CategoryMap
 		Esa         service.EsaConf
+		Asana       service.AsanaConf
 	}
 )
 
@@ -73,6 +74,13 @@ func collectActivities(begin, end *time.Time) ([]model.ServiceActivity, error) {
 			return nil, err
 		}
 		sas = append(sas, esaActs...)
+	}
+	if asana := service.NewAsana(&conf.Asana); asana != nil {
+		asanaActs, err := asana.CollectServiceActivity(begin, end)
+		if err != nil {
+			return nil, err
+		}
+		sas = append(sas, asanaActs...)
 	}
 
 	rb = reporter.NewReportBuilder(conf.CategoryMap)
