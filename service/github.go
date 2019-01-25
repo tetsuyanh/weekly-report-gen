@@ -31,19 +31,13 @@ type (
 		Assignee     string
 	}
 
-	GithubToken struct {
-		APIToken string
-	}
-
 	GithubActivity struct {
-		Cans []string
-		Act  *model.Activity
+		Issue *github.Issue
 	}
 )
 
 func NewGithub(conf *GithubConf) Service {
 	if !conf.Enable {
-		// not using
 		return nil
 	}
 
@@ -72,67 +66,53 @@ func (g *Github) CollectServiceActivity(begin, end *time.Time) ([]model.ServiceA
 
 	acts := make([]model.ServiceActivity, 0)
 	for _, i := range is {
+		issue := i
 		// skip out of range
-		if i.ClosedAt.After(*end) {
+		if issue.ClosedAt.After(*end) {
 			continue
 		}
-		// log.Infof("%s, %v", i.GetTitle(), i)
-		act := &GithubActivity{
-			Cans: makeCategoryCandidateByGithub(i),
-			Act:  makeActivityByGithub(i),
+		// skip other's
+		if *issue.Assignee.Login != g.conf.Assignee {
+			continue
 		}
-		acts = append(acts, act)
+		acts = append(acts, &GithubActivity{Issue: issue})
 	}
 	return acts, nil
 }
 
-func makeCategoryCandidateByGithub(i *github.Issue) []string {
+// implemented model.ServiceActivity
+func (ga *GithubActivity) CategoryCandidates() []string {
 	cans := []string{}
-	// 1st candidate is repo name
-	if i.Repository != nil {
-		cans = append(cans, *i.Repository.Name)
+	if ga.Issue.Repository != nil {
+		cans = append(cans, *ga.Issue.Repository.Name)
 	}
-	// 2nd candidate is milestone name
-	if i.Milestone != nil {
-		cans = append(cans, *i.Milestone.Title)
+	if ga.Issue.Milestone != nil {
+		cans = append(cans, *ga.Issue.Milestone.Title)
 	}
 	return cans
 }
 
-func makeActivityByGithub(i *github.Issue) *model.Activity {
-	// log.Infof("issue: %v\n", i)
-
-	titles := []string{}
-	if i.Repository != nil {
-		titles = append(titles, *i.Repository.Name)
-	}
-	if i.Milestone != nil {
-		titles = append(titles, *i.Milestone.Title)
-	}
-	titles = append(titles, *i.Title)
-
-	link := i.URL
-
-	labels := []string{}
-	for _, l := range i.Labels {
-		labels = append(labels, *l.Name)
-	}
-	meta := []string{fmt.Sprintf("github issue#%d(%s) Closed at %s", *i.Number, strings.Join(labels, ","), i.ClosedAt.Format(githubDateFormat))}
-
-	return &model.Activity{
-		Title:       strings.Join(titles, "/"),
-		Description: "",
-		Link:        *link,
-		Meta:        meta,
-	}
-}
-
-// implemented model.ServiceActivity
-func (ga *GithubActivity) CategoryCandidates() []string {
-	return ga.Cans
-}
-
 // implemented model.ServiceActivity
 func (ga *GithubActivity) Activity() *model.Activity {
-	return ga.Act
+	a := &model.Activity{}
+
+	titles := []string{}
+	if ga.Issue.Repository != nil {
+		titles = append(titles, *ga.Issue.Repository.Name)
+	}
+	if ga.Issue.Milestone != nil {
+		titles = append(titles, *ga.Issue.Milestone.Title)
+	}
+	titles = append(titles, *ga.Issue.Title)
+	a.Title = strings.Join(titles, "/")
+
+	a.Link = *ga.Issue.URL
+
+	labels := []string{}
+	for _, l := range ga.Issue.Labels {
+		labels = append(labels, *l.Name)
+	}
+	a.Meta = []string{fmt.Sprintf("github issue#%d(%s) Closed at %s", *ga.Issue.Number, strings.Join(labels, ","), ga.Issue.ClosedAt.Format(githubDateFormat))}
+
+	return a
 }
