@@ -19,6 +19,7 @@ type (
 		CategoryMap reporter.CategoryMap
 		Esa         service.EsaConf
 		Asana       service.AsanaConf
+		Github      service.GithubConf
 	}
 )
 
@@ -81,6 +82,13 @@ func collectActivities(begin, end *time.Time) ([]model.ServiceActivity, error) {
 			return nil, err
 		}
 		sas = append(sas, asanaActs...)
+	}
+	if github := service.NewGithub(&conf.Github); github != nil {
+		githubActs, err := github.CollectServiceActivity(begin, end)
+		if err != nil {
+			return nil, err
+		}
+		sas = append(sas, githubActs...)
 	}
 
 	rb = reporter.NewReportBuilder(conf.CategoryMap)

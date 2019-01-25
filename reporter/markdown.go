@@ -26,7 +26,7 @@ func (md *Markdown) Report(r *model.Report, w io.Writer) error {
 			return e
 		}
 		for _, act := range acts {
-			w.Write([]byte(fmt.Sprintf("  - [%s](%s) (%s)\n", act.Title, act.Link, strings.Join(act.Meta, ", "))))
+			w.Write([]byte(fmt.Sprintf("  - [%s](%s): %s\n", act.Title, act.Link, strings.Join(act.Meta, ", "))))
 		}
 	}
 	return nil

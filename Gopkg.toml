@@ -48,3 +48,7 @@
 [[constraint]]
   name = "github.com/tetsuyanh/go-asana"
   revision = "d129a2fd79167909a4b8f8ab2c53ee6947618063"
+
+[[constraint]]
+  name = "github.com/tetsuyanh/go-github"
+  version = "v21.0.1"
