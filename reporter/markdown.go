@@ -3,13 +3,16 @@ package reporter
 import (
 	"fmt"
 	"io"
-	"strings"
+)
 
-	"github.com/tetsuyanh/weekly-report-gen/model"
+const (
+	markdownDateFormat = "01/02/2006"
 )
 
 type (
 	Markdown struct{}
+
+	MarkdownConf struct{}
 )
 
 func NewMarkdown() Reporter {
@@ -17,8 +20,8 @@ func NewMarkdown() Reporter {
 }
 
 // implemented Reporter
-func (md *Markdown) Report(r *model.Report, w io.Writer) error {
-	for cat, acts := range r.CategorizedActivity {
+func (md *Markdown) Report(catActs CategorizedActivities, w io.Writer) error {
+	for cat, acts := range catActs {
 		if len(acts) == 0 {
 			continue
 		}
@@ -26,7 +29,7 @@ func (md *Markdown) Report(r *model.Report, w io.Writer) error {
 			return e
 		}
 		for _, act := range acts {
-			w.Write([]byte(fmt.Sprintf("  - [%s](%s): %s\n", act.Title, act.Link, strings.Join(act.Meta, ", "))))
+			w.Write([]byte(fmt.Sprintf("  - [%s](%s) %s on %s\n", act.Title, act.Link, act.Description, act.UpdatedAt.Format(markdownDateFormat))))
 		}
 	}
 	return nil

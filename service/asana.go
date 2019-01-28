@@ -58,7 +58,7 @@ func (a *Asana) CollectServiceActivity(begin, end *time.Time) ([]model.ServiceAc
 		ModifiedSince:  begin.Format(asanaDateFormat),
 		Workspace:      a.conf.Workspace,
 		Assignee:       a.conf.Assignee,
-		OptExpand:      []string{"completed", "completed_at", "modified_at", "name", "assignee", "projects", "memberships"},
+		OptExpand:      []string{"completed", "completed_at", "modified_at", "name", "assignee", "projects", "memberships", "parent"},
 	}
 	ts, err := a.cli.ListTasks(context.Background(), opt)
 	if err != nil {
@@ -99,55 +99,65 @@ func (ea *AsanaActivity) CategoryCandidates() []string {
 			break
 		}
 	}
+	if ea.Task.ParentTask != nil {
+		cans = append(cans, ea.Task.ParentTask.Name)
+	}
 	return cans
 }
 
 // implemented model.ServiceActivity
 func (aa *AsanaActivity) Activity() *model.Activity {
-	team, prj, sec := getRelations(aa)
 	a := &model.Activity{}
 
-	titles := []string{}
-	if team != nil {
-		titles = append(titles, team.Name)
-	}
-	if prj != nil {
-		titles = append(titles, prj.Name)
-	}
-	if sec != nil {
-		titles = append(titles, sec.Name)
-	}
-	titles = append(titles, aa.Task.Name)
-	a.Title = strings.Join(titles, "/")
+	a.Title = buildTitle(aa.Task)
 
-	// '0' will be redirected
-	var prjGID string
-	if prj != nil {
-		prjGID = prj.GID
-	} else {
-		prjGID = "0"
-	}
-	a.Link = fmt.Sprintf("%s/%s/%s/f", asanaTaskURLHeader, prjGID, aa.Task.GID)
+	// path '0' will be redirected
+	a.Link = fmt.Sprintf("%s/0/%s/f", asanaTaskURLHeader, aa.Task.GID)
 
-	var meta string
 	if aa.Task.Completed {
-		meta = fmt.Sprintf("asana task Completed at %s", aa.Task.CompletedAt.Format(asanaDateFormat))
+		a.Description = "asana task Completed"
+		a.UpdatedAt = aa.Task.CompletedAt
 	} else {
-		meta = fmt.Sprintf("asana task Modified at %s", aa.Task.ModifiedAt.Format(asanaDateFormat))
+		a.Description = "asana task Modified"
+		a.UpdatedAt = aa.Task.ModifiedAt
 	}
-	a.Meta = []string{meta}
 
 	return a
 }
 
+func buildTitle(t *asana.Task) string {
+	origin := t
+	if t.ParentTask != nil {
+		origin = t.ParentTask
+	}
+
+	team, prj, sec := getRelations(origin)
+	layers := []string{}
+	if team != nil {
+		layers = append(layers, team.Name)
+	}
+	if prj != nil {
+		layers = append(layers, prj.Name)
+	}
+	if sec != nil {
+		layers = append(layers, sec.Name)
+	}
+	if t.ParentTask != nil {
+		layers = append(layers, t.ParentTask.Name)
+	}
+	layers = append(layers, t.Name)
+
+	return strings.Join(layers, "/")
+}
+
 // no project
-func getRelations(aa *AsanaActivity) (*asana.Team, *asana.Project, *asana.Section) {
+func getRelations(t *asana.Task) (*asana.Team, *asana.Project, *asana.Section) {
 	var team *asana.Team
 	var prj *asana.Project
 	var sec *asana.Section
 
 	// prioritize membership has section
-	for _, m := range aa.Task.Memberships {
+	for _, m := range t.Memberships {
 		if m.Section != nil {
 			prj = &m.Project
 			sec = m.Section
@@ -157,14 +167,14 @@ func getRelations(aa *AsanaActivity) (*asana.Team, *asana.Project, *asana.Sectio
 	// find project
 	if prj == nil {
 		// pick haad project
-		for _, m := range aa.Task.Memberships {
+		for _, m := range t.Memberships {
 			prj = &m.Project
 		}
 	}
 
 	// find team
 	if prj != nil {
-		for _, p := range aa.Task.Projects {
+		for _, p := range t.Projects {
 			if p.GID == prj.GID {
 				team = &p.Team
 			}

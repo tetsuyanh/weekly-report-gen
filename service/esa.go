@@ -86,13 +86,13 @@ func (ea *EsaActivity) Activity() *model.Activity {
 	a.Title = ea.Post.FullName
 	a.Link = ea.Post.URL
 
-	var action string
 	if ea.Post.CreatedAt == ea.Post.UpdatedAt {
-		action = "Created"
+		a.Description = "esa post Created"
+		a.UpdatedAt = ea.Post.CreatedAt
 	} else {
-		action = "Updated"
+		a.Description = "esa post Updated"
+		a.UpdatedAt = ea.Post.UpdatedAt
 	}
-	a.Meta = []string{fmt.Sprintf("esa post %s at %s", action, ea.Post.UpdatedAt.Format(esaDateFormat))}
 
 	return a
 }

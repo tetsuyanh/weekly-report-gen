@@ -1,11 +1,24 @@
+[reporter]
 out ="" # filepath, empty means stdout
 
-[categoryMap]
+[reporter.categorizer.categoryMap]
 日本 = ["日本", "にほん", "にっぽん", "ニホン", "ニッポン", "Japan", "japan", "JP"]
 アメリカ = ["米", ”あめりか", "アメリカ", "USA", "US"]
 
-[esa]
+[service.esa]
 enable = false
 apiToken = ""
 team = ""
 user = ""
+
+[service.asana]
+enable = false
+apiToken = ""
+workspace = ""
+assignee = "" # is like '67254**********'
+
+[service.github]
+enable = false
+apiToken = ""
+organization = ""
+assignee = ""

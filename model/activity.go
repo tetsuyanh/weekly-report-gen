@@ -1,11 +1,15 @@
 package model
 
+import (
+	"time"
+)
+
 type (
 	Activity struct {
 		Title       string
 		Description string
 		Link        string
-		Meta        []string
+		UpdatedAt   time.Time
 	}
 
 	ServiceActivity interface {

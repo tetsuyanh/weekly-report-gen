@@ -112,7 +112,8 @@ func (ga *GithubActivity) Activity() *model.Activity {
 	for _, l := range ga.Issue.Labels {
 		labels = append(labels, *l.Name)
 	}
-	a.Meta = []string{fmt.Sprintf("github issue#%d(%s) Closed at %s", *ga.Issue.Number, strings.Join(labels, ","), ga.Issue.ClosedAt.Format(githubDateFormat))}
+	a.Description = fmt.Sprintf("github issue#%d(%s) Closed", *ga.Issue.Number, strings.Join(labels, ","))
+	a.UpdatedAt = *ga.Issue.ClosedAt
 
 	return a
 }
