@@ -1,9 +1,14 @@
-[reporter]
-out ="" # filepath, empty means stdout
+version = "v0.1.0"
+
+[root]
+# for users don't use command line
+date = "" # the end date of week, e.g. '2019-01-28'
+reporter = "" # reporter name, default 'markdown'
+out = "" # output filepath, default os.Stdout
 
 [reporter.categorizer.categoryMap]
-日本 = ["日本", "にほん", "にっぽん", "ニホン", "ニッポン", "Japan", "japan", "JP"]
-アメリカ = ["米", ”あめりか", "アメリカ", "USA", "US"]
+ProjectX = ["Prj.X", "project-x"]
+WholeCompany = ["MTG", "1on1, ""Party"]
 
 [service.esa]
 enable = false
@@ -14,11 +19,11 @@ user = ""
 [service.asana]
 enable = false
 apiToken = ""
-workspace = ""
-assignee = "" # is like '67254**********'
+workspaceId = "" # gid of https://app.asana.com/api/1.0/workspaces
+userId = "" # gid of https://app.asana.com/api/1.0/users/me
 
 [service.github]
 enable = false
 apiToken = ""
 organization = ""
-assignee = ""
+user = ""

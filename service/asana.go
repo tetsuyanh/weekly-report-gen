@@ -25,10 +25,10 @@ type (
 	}
 
 	AsanaConf struct {
-		Enable    bool
-		APIToken  string
-		Workspace string
-		Assignee  string
+		Enable      bool
+		APIToken    string
+		WorkspaceID string
+		UserID      string
 	}
 
 	AsanaActivity struct {
@@ -56,8 +56,8 @@ func (a *Asana) CollectServiceActivity(begin, end *time.Time) ([]model.ServiceAc
 	opt := &asana.Filter{
 		CompletedSince: begin.Format(asanaDateFormat),
 		ModifiedSince:  begin.Format(asanaDateFormat),
-		Workspace:      a.conf.Workspace,
-		Assignee:       a.conf.Assignee,
+		Workspace:      a.conf.WorkspaceID,
+		Assignee:       a.conf.UserID,
 		OptExpand:      []string{"completed", "completed_at", "modified_at", "name", "assignee", "projects", "memberships", "parent"},
 	}
 	ts, err := a.cli.ListTasks(context.Background(), opt)
@@ -73,7 +73,7 @@ func (a *Asana) CollectServiceActivity(begin, end *time.Time) ([]model.ServiceAc
 			continue
 		}
 		// skip other's
-		if task.Assignee.GID != a.conf.Assignee {
+		if task.Assignee.GID != a.conf.UserID {
 			continue
 		}
 		acts = append(acts, &AsanaActivity{Task: &task})

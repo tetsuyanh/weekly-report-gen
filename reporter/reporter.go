@@ -12,6 +12,12 @@ const (
 	ReporterMarkdown = "markdown"
 )
 
+var (
+	Reporters = []string{
+		ReporterMarkdown,
+	}
+)
+
 type (
 	Conf struct {
 		Categorizer  CategorizerConf

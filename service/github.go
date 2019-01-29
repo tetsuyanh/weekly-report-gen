@@ -28,7 +28,7 @@ type (
 		Enable       bool
 		APIToken     string
 		Organization string
-		Assignee     string
+		User         string
 	}
 
 	GithubActivity struct {
@@ -72,7 +72,7 @@ func (g *Github) CollectServiceActivity(begin, end *time.Time) ([]model.ServiceA
 			continue
 		}
 		// skip other's
-		if *issue.Assignee.Login != g.conf.Assignee {
+		if *issue.Assignee.Login != g.conf.User {
 			continue
 		}
 		acts = append(acts, &GithubActivity{Issue: issue})
