@@ -2,13 +2,13 @@
 
 weekly-report-gen is a weekly report generator of web service activities.
 
-## features
+## Features
 
 - categorize activities across each web services
-- any web service extension
-- any output format extension
+- extend any web service as Service
+- extend any output as Reporter
 
-## extensions
+## Extensions
 
 - service
   - [asana](https://asana.com)
@@ -16,3 +16,8 @@ weekly-report-gen is a weekly report generator of web service activities.
   - [github](https://github.com/)
 - reporter
   - markdown
+
+
+## License
+
+see [LICENSE](./LICENSE)
