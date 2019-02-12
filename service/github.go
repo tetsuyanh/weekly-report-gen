@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/tetsuyanh/go-github/github"
+	"github.com/google/go-github/v23/github"
 	"golang.org/x/oauth2"
 
 	"github.com/tetsuyanh/weekly-report-gen/model"

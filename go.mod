@@ -1,0 +1,31 @@
+module github.com/tetsuyanh/weekly-report-gen
+
+require (
+	github.com/fsnotify/fsnotify v1.4.7
+	github.com/golang/protobuf v1.2.0
+	github.com/google/go-github/v23 v23.0.0
+	github.com/google/go-querystring v1.0.0
+	github.com/hashicorp/hcl v1.0.0
+	github.com/inconshreveable/mousetrap v1.0.0
+	github.com/konsorten/go-windows-terminal-sequences v1.0.1
+	github.com/magiconair/properties v1.8.0
+	github.com/mitchellh/mapstructure v1.1.2
+	github.com/pelletier/go-toml v1.2.0
+	github.com/pkg/errors v0.8.1
+	github.com/sirupsen/logrus v1.3.0
+	github.com/spf13/afero v1.2.0
+	github.com/spf13/cast v1.3.0
+	github.com/spf13/cobra v0.0.3
+	github.com/spf13/jwalterweatherman v1.0.0
+	github.com/spf13/pflag v1.0.3
+	github.com/spf13/viper v1.3.1
+	github.com/tetsuyanh/esa-go v0.0.0-20171001110724-a41514de2edf
+	github.com/tetsuyanh/go-asana v0.0.0-20190124045101-d129a2fd7916
+	golang.org/x/crypto v0.0.0-20190123085648-057139ce5d2b
+	golang.org/x/net v0.0.0-20190119204137-ed066c81e75e
+	golang.org/x/oauth2 v0.0.0-20190115181402-5dab4167f31c
+	golang.org/x/sys v0.0.0-20190123074212-c6b37f3e9285
+	golang.org/x/text v0.3.0
+	google.golang.org/appengine v1.4.0
+	gopkg.in/yaml.v2 v2.2.2
+)
