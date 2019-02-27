@@ -1,4 +1,4 @@
-package reporter
+package categorizer
 
 import (
 	"sort"
@@ -12,7 +12,7 @@ const (
 )
 
 type (
-	CategorizerConf struct {
+	Conf struct {
 		CategoryMap CategoryMap
 	}
 
@@ -26,7 +26,7 @@ type (
 	CategorizedActivities map[string][]*model.Activity
 )
 
-func NewCategorizer(conf *CategorizerConf) *Categorizer {
+func NewCategorizer(conf *Conf) *Categorizer {
 	catActs := make(map[string][]*model.Activity, 0)
 	for k, _ := range conf.CategoryMap {
 		// specified category key

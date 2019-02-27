@@ -3,6 +3,8 @@ package reporter
 import (
 	"fmt"
 	"io"
+
+	"github.com/tetsuyanh/weekly-report-gen/categorizer"
 )
 
 const (
@@ -20,7 +22,7 @@ func NewMarkdown() Reporter {
 }
 
 // implemented Reporter
-func (md *Markdown) Report(catActs CategorizedActivities, w io.Writer) error {
+func (md *Markdown) Report(catActs categorizer.CategorizedActivities, w io.Writer) error {
 	for cat, acts := range catActs {
 		if len(acts) == 0 {
 			continue

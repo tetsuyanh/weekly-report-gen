@@ -4,45 +4,36 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/pkg/errors"
-	"github.com/tetsuyanh/weekly-report-gen/model"
+	"github.com/tetsuyanh/weekly-report-gen/categorizer"
 )
 
 const (
-	ReporterMarkdown = "markdown"
+	ReportTypeMarkdown = "markdown"
 )
 
 var (
-	Reporters = []string{
-		ReporterMarkdown,
+	ReportTypes = []string{
+		ReportTypeMarkdown,
 	}
 )
 
 type (
 	Conf struct {
-		Categorizer  CategorizerConf
 		MarkdownConf MarkdownConf
 	}
 
 	Reporter interface {
-		Report(catActs CategorizedActivities, w io.Writer) error
+		Report(catActs categorizer.CategorizedActivities, w io.Writer) error
 	}
 )
 
-func ReportActivities(conf *Conf, repId string, srvActs []model.ServiceActivity, w io.Writer) error {
-	cater := NewCategorizer(&conf.Categorizer)
-
-	var rep Reporter
-	switch repId {
-	case ReporterMarkdown:
-		rep = NewMarkdown()
+func NewReporter(repType string) (Reporter, error) {
+	var repo Reporter
+	switch repType {
+	case ReportTypeMarkdown:
+		repo = NewMarkdown()
 	default:
-		return fmt.Errorf("unknown reporter: %s\n", repId)
+		return nil, fmt.Errorf("unknown report type: %s\n", repType)
 	}
-
-	if err := rep.Report(cater.Categorize(srvActs), w); err != nil {
-		return errors.Wrap(err, "rep.Report")
-	}
-
-	return nil
+	return repo, nil
 }

@@ -6,15 +6,7 @@ LDFLAGS := -X 'github.com/tetsuyanh/weekly-report-gen/cmd.version=$(VERSION)' \
 
 ## Setup
 setup:
-	go get github.com/golang/dep
-
-## Install dependencies
-install:
-	dep ensure
-
-## Update dependencies
-update:
-	dep ensure -update
+	go mod download
 
 ## Run application
 run: ./main.go

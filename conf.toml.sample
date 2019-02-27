@@ -1,14 +1,12 @@
-version = "v0.1.0"
+version = "v0.2.0"
 
-[root]
-# for users don't use command line
 date = "" # the end date of week, e.g. '2019-01-28'
-reporter = "" # reporter name, default 'markdown'
+reportType = "" # reporter type, default 'markdown'
 out = "" # output filepath, default os.Stdout
 
-[reporter.categorizer.categoryMap]
-ProjectX = ["Prj.X", "project-x"]
-WholeCompany = ["MTG", "1on1, ""Party"]
+[categorizer.categoryMap]
+ProjectX = ["PrjX", "project-x"]
+Corprate = ["MTG", "1on1, "Party"]
 
 [service.esa]
 enable = false
