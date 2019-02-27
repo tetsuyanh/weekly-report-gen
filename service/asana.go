@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/tetsuyanh/go-asana/asana"
@@ -109,7 +108,9 @@ func (ea *AsanaActivity) CategoryCandidates() []string {
 func (aa *AsanaActivity) Activity() *model.Activity {
 	a := &model.Activity{}
 
-	a.Title = buildTitle(aa.Task)
+	a.Path = buildPath(aa.Task)
+
+	a.Title = aa.Task.Name
 
 	// path '0' will be redirected
 	a.Link = fmt.Sprintf("%s/0/%s/f", asanaTaskURLHeader, aa.Task.GID)
@@ -125,29 +126,28 @@ func (aa *AsanaActivity) Activity() *model.Activity {
 	return a
 }
 
-func buildTitle(t *asana.Task) string {
+func buildPath(t *asana.Task) []string {
 	origin := t
 	if t.ParentTask != nil {
 		origin = t.ParentTask
 	}
 
 	team, prj, sec := getRelations(origin)
-	layers := []string{}
+	paths := []string{}
 	if team != nil {
-		layers = append(layers, team.Name)
+		paths = append(paths, team.Name)
 	}
 	if prj != nil {
-		layers = append(layers, prj.Name)
+		paths = append(paths, prj.Name)
 	}
 	if sec != nil {
-		layers = append(layers, sec.Name)
+		paths = append(paths, sec.Name)
 	}
 	if t.ParentTask != nil {
-		layers = append(layers, t.ParentTask.Name)
+		paths = append(paths, t.ParentTask.Name)
 	}
-	layers = append(layers, t.Name)
 
-	return strings.Join(layers, "/")
+	return paths
 }
 
 // no project

@@ -75,7 +75,7 @@ var rootCmd = &cobra.Command{
 			return
 		}
 
-		repo, err := reporter.NewReporter(conf.ReportType)
+		repo, err := reporter.NewReporter(conf.ReportType, &conf.Reporter)
 		if err != nil {
 			log.Error(err)
 			return

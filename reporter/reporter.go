@@ -19,7 +19,7 @@ var (
 
 type (
 	Conf struct {
-		MarkdownConf MarkdownConf
+		Markdown MarkdownConf
 	}
 
 	Reporter interface {
@@ -27,11 +27,11 @@ type (
 	}
 )
 
-func NewReporter(repType string) (Reporter, error) {
+func NewReporter(repType string, conf *Conf) (Reporter, error) {
 	var repo Reporter
 	switch repType {
 	case ReportTypeMarkdown:
-		repo = NewMarkdown()
+		repo = NewMarkdown(&conf.Markdown)
 	default:
 		return nil, fmt.Errorf("unknown report type: %s\n", repType)
 	}

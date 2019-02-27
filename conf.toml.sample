@@ -25,3 +25,6 @@ enable = false
 apiToken = ""
 organization = ""
 user = ""
+
+[reporter.markdown]
+showPath = false

@@ -3,22 +3,29 @@ package reporter
 import (
 	"fmt"
 	"io"
+	"strings"
 
 	"github.com/tetsuyanh/weekly-report-gen/categorizer"
 )
 
 const (
-	markdownDateFormat = "01/02/2006"
+	markdownDateFormat = "01/02"
 )
 
 type (
-	Markdown struct{}
+	Markdown struct {
+		conf *MarkdownConf
+	}
 
-	MarkdownConf struct{}
+	MarkdownConf struct {
+		ShowPath bool
+	}
 )
 
-func NewMarkdown() Reporter {
-	return &Markdown{}
+func NewMarkdown(conf *MarkdownConf) Reporter {
+	return &Markdown{
+		conf: conf,
+	}
 }
 
 // implemented Reporter
@@ -31,7 +38,11 @@ func (md *Markdown) Report(catActs categorizer.CategorizedActivities, w io.Write
 			return e
 		}
 		for _, act := range acts {
-			w.Write([]byte(fmt.Sprintf("  - [%s](%s) %s on %s\n", act.Title, act.Link, act.Description, act.UpdatedAt.Format(markdownDateFormat))))
+			path := ""
+			if md.conf.ShowPath {
+				path = strings.Join(act.Path, "/") + "/"
+			}
+			w.Write([]byte(fmt.Sprintf("  - [%s%s](%s) %s on %s\n", path, act.Title, act.Link, act.Description, act.UpdatedAt.Format(markdownDateFormat))))
 		}
 	}
 	return nil

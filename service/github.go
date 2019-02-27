@@ -96,15 +96,14 @@ func (ga *GithubActivity) CategoryCandidates() []string {
 func (ga *GithubActivity) Activity() *model.Activity {
 	a := &model.Activity{}
 
-	titles := []string{}
 	if ga.Issue.Repository != nil {
-		titles = append(titles, *ga.Issue.Repository.Name)
+		a.Path = append(a.Path, *ga.Issue.Repository.Name)
 	}
 	if ga.Issue.Milestone != nil {
-		titles = append(titles, *ga.Issue.Milestone.Title)
+		a.Path = append(a.Path, *ga.Issue.Milestone.Title)
 	}
-	titles = append(titles, *ga.Issue.Title)
-	a.Title = strings.Join(titles, "/")
+
+	a.Title = *ga.Issue.Title
 
 	a.Link = *ga.Issue.URL
 

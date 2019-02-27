@@ -6,6 +6,7 @@ import (
 
 type (
 	Activity struct {
+		Path        []string
 		Title       string
 		Description string
 		Link        string

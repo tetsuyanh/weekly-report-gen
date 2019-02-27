@@ -83,7 +83,8 @@ func (ea *EsaActivity) CategoryCandidates() []string {
 func (ea *EsaActivity) Activity() *model.Activity {
 	a := &model.Activity{}
 
-	a.Title = ea.Post.FullName
+	a.Path = strings.Split(ea.Post.Category, "/")
+	a.Title = ea.Post.Name
 	a.Link = ea.Post.URL
 
 	if ea.Post.CreatedAt == ea.Post.UpdatedAt {
